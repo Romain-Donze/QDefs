@@ -11,12 +11,19 @@ static const QString ERR_ENUM_CLASS    { QStringLiteral ("Enum-class !") };
 static const QString ERR_ATTACHED_OBJ  { QStringLiteral ("Attached-object class !") };
 static const QString ERR_ABSTRACT_BASE { QStringLiteral ("Abstract base class !") };
 
-// qmlRegisterSingletonType
-#define Q_REGISTER_SINGLETON(cls, qmlName, impName) \
-static void registerSingletonTypes##cls() { \
+// qmlRegisterSingletonInstance
+#define Q_REGISTER_SINGLETON_INSTANCE(cls, qmlName, impName) \
+static void registerSingletonInstance##cls() { \
     qmlRegisterSingletonInstance<cls>(impName, 1,0, qmlName, cls::Get()); \
 } \
-Q_COREAPP_STARTUP_FUNCTION(registerSingletonTypes##cls) \
+Q_COREAPP_STARTUP_FUNCTION(registerSingletonInstance##cls) \
+
+// qmlRegisterSingletonType
+#define Q_REGISTER_SINGLETON(cls, qmlName, impName) \
+static void registerSingletonType##cls() { \
+    qmlRegisterSingletonType<cls>(impName, 1,0, qmlName, cls::GetQML); \
+} \
+Q_COREAPP_STARTUP_FUNCTION(registerSingletonType##cls) \
 
 // qmlRegisterType
 #define Q_REGISTER(cls, qmlName, impName) \

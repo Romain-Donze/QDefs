@@ -16,9 +16,11 @@ Installation
 
 * `Q_READONLY_***_PROPERTY` : another macro that does almost the same as `Q_WRITABLE_PROPERTY` except that the property is not modifiable from the QML side, only C++ can access the setter.
 
-* `Q_CONSTANT_***_PROPERTY` : a simplified version of the previous macros, that exposes a constant property with no getter and no setter, from C++ or QML side.
+* `Q_CONSTANT_***_PROPERTY` : a simplified version of the previous macros, that exposes a constant property with only a getter, from C++ or QML side.
 
-The `***` can be either `VAR`, `PTR`, `REF`. The three first are simple macros that you use by simply passing the non-qualified type (`T`) and it'll add the qualifiers for var (none), pointer (`*`), or constant-reference (`const &`) where needed.
+* `Q_ABSTRACT_***_PROPERTY` : a simplified version of the previous macros, that exposes a purely virtual constant getter to be override by derrived class.
+
+The `***` can be either `VAR`, `PTR`, `REF`, `ENU` or `FUZ`. The three first are simple macros that you use by simply passing the non-qualified type (`T`) and it'll add the qualifiers for var (none), pointer (`*`), or constant-reference (`const &`) where needed. The fourth one will do the same as `VAR` except it will be casted to `int` in QML -> usefull for properties based on `Q_ENUM_CLASS`. The fifth one will do the same as `VAR` except the comparison in the setter will be donne using `qFuzzyCompare`.
 
 ### For simple enum class that can be used in C++ and QML
 
@@ -36,7 +38,7 @@ The `***` can be either `VAR`, `PTR`, `REF`. The three first are simple macros t
 
 * `Q_REGISTER_METATYPE` : a macro that register a metatype to QML
 
-* `Q_REGISTER_SINGLETON` : a macro that register a Q_OBJECT singleton instance to a QML module (Major versio=1, Minor version=0)
+* `Q_REGISTER_SINGLETON_INSTANCE` : a macro that register a Q_OBJECT singleton instance to a QML module (Major versio=1, Minor version=0)
 
 ### For simple C++ time measuring
 

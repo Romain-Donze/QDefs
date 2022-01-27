@@ -13,7 +13,7 @@
     struct Name { \
         Q_GADGET \
         public: \
-            enum Type : int { __VA_ARGS__ }; Q_ENUM (Type) \
+            enum Type : int { __VA_ARGS__ , LastEnumType = 0xffff }; Q_ENUM (Type) \
             static QByteArray asByteArray (const int value) { \
                 return QByteArray (staticMetaObject.enumerator (0).valueToKey (value)); \
             } \
@@ -33,6 +33,6 @@
     }; \
     Q_DECLARE_METATYPE (Name::Type)
 
-Q_ENUM_CLASS (_Test_QmlEnumClass_) // NOTE : to avoid "no suitable class found" MOC note
+Q_ENUM_CLASS (_Test_QmlEnumClass_, FirstVal) // NOTE : to avoid "no suitable class found" MOC note
 
 #endif // QENUMDEFS_H

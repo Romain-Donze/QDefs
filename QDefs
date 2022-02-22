@@ -1,5 +1,6 @@
 #include "qutildefs.h"
 #include "qregisterdefs.h"
+#include "qflagdefs.h"
 #include "qenumdefs.h"
 #include "qdebugdefs.h"
 #include "qpropertydefs.h"

@@ -18,8 +18,9 @@
 #define ABS(N) ((N<0)?(-N):(N))
 #define SIGN(N) ((N<0)?(-1):(1))
 
-#define MIN(N,M) ((N<M)?(N):(M))
-#define MAX(N,M) ((N>M)?(N):(M))
+#define SAT(N,M,V) ((V<N)?(N):((V>M)?(M):(V)))
+#define MIN(N,M)   ((N<M)?(N):(M))
+#define MAX(N,M)   ((N>M)?(N):(M))
 
 struct _QUTILDEFS_ { Q_GADGET }; // mock object
 

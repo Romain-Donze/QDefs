@@ -7,21 +7,21 @@
 #include <QJSEngine>
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-// Définition des macros Singleton
+// Private: for declaration purpose
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define Q_OBJECT_SINGLETON(cls) \
+#define _Q_OBJECT_SINGLETON_IMPL(TYPE) \
     public: \
-    static cls *Get() \
+    static TYPE *Get() \
     { \
         static QMutex mutex; \
-        static cls *m_instance=nullptr; \
+        static TYPE *m_instance=nullptr; \
         if(m_instance==nullptr) \
         { \
             QMutexLocker locker(&mutex); \
             if(m_instance==nullptr) \
             { \
-                m_instance = new cls; \
+                m_instance = new TYPE; \
                 if(qobject_cast<QObject*>(m_instance)) \
                 { \
                     m_instance->setParent(nullptr); \
@@ -33,16 +33,23 @@
     } \
     private: \
 
-#define Q_OBJECT_QML_SINGLETON(cls) \
-    Q_OBJECT_SINGLETON(cls) \
+#define _Q_OBJECT_QML_SINGLETON_IMPL(TYPE) \
+    _Q_OBJECT_SINGLETON_IMPL(TYPE) \
     public: \
-    static cls *GetQML(QQmlEngine *engine,  QJSEngine *scriptEngine) \
+    static TYPE *GetQML(QQmlEngine *engine,  QJSEngine *scriptEngine) \
     { \
         Q_UNUSED(engine); \
         Q_UNUSED(scriptEngine); \
         return Get(); \
     } \
     private: \
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
+// Public: use these instead
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#define Q_OBJECT_SINGLETON(TYPE)            _Q_OBJECT_SINGLETON_IMPL(TYPE)
+#define Q_OBJECT_QML_SINGLETON(TYPE)        _Q_OBJECT_QML_SINGLETON_IMPL(TYPE)
 
 struct _QSINGLETONDEFS_ { Q_GADGET }; // mock object
 

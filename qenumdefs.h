@@ -10,10 +10,10 @@
 #endif
 
 #define Q_ENUM_CLASS(Name, ...) \
-    struct Name { \
+    class Name { \
         Q_GADGET \
         public: \
-            enum Type : int { __VA_ARGS__ , LastEnumType = 0xffff }; Q_ENUM (Type) \
+            enum Type { __VA_ARGS__ }; Q_ENUM (Type) \
             static QByteArray asByteArray (const int value) { \
                 return QByteArray (staticMetaObject.enumerator (0).valueToKey (value)); \
             } \

@@ -4,7 +4,13 @@
 #include <QDebug>
 #include <QString>
 
+#define QDEBUG_NO_TRACE
+
+#ifndef QDEBUG_NO_TRACE
 #define qTrace QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC,"QtTraceMsg").debug
+#else
+#define qTrace QMessageLogger().noDebug
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Fonctions de debug

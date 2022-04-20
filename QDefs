@@ -6,3 +6,4 @@
 #include "qpropertydefs.h"
 #include "qsingletondefs.h"
 #include "qtimedefs.h"
+#include "qmodeldefs.h"

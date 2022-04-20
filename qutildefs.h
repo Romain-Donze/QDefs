@@ -2,25 +2,41 @@
 #define QUTILDEFS_H
 
 #include <QObject>
+#include <QtMath>
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-// Exit codes
+// Math methods
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define EXIT_CODE_RESTART ((int)-200)
-#define EXIT_CODE_QUIT ((int)-100)
+Q_REQUIRED_RESULT static inline Q_DECL_UNUSED bool qFuzzyCompare(double p1, double p2, double precision)
+{
+    precision = qBound(-10.,precision,10.);
+    int val1 = qRound(p1*qPow(10, precision));
+    int val2 = qRound(p2*qPow(10, precision));
+    return val1 == val2;
+}
 
+Q_REQUIRED_RESULT static inline Q_DECL_UNUSED bool qFuzzyIsNull(double d, double precision)
+{
+    precision = qBound(-10.,precision,10.);
+    int val = qRound(d*qPow(10, precision));
+    return val == 0;
+}
+
+template <typename T>
+constexpr inline int qSign(const T &a) { return (a < 0) ? -1 : 1; }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Math macros
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define ABS(N) ((N<0)?(-N):(N))
-#define SIGN(N) ((N<0)?(-1):(1))
+#define ABS(N)        qAbs(N) //(((N)<0)?(-(N)):(N))
+#define ROUND(N)      qRound(N)
+#define SIGN(N)       qSign(N) //(((N)<0)?(-1):(1))
+#define BOUND(N,V,M)  qBound(N,V,M)
 
-#define SAT(N,M,V) ((V<N)?(N):((V>M)?(M):(V)))
-#define MIN(N,M)   ((N<M)?(N):(M))
-#define MAX(N,M)   ((N>M)?(N):(M))
+#define MIN(N,M)   qMin(N,M) //(((N)<(M))?(N):(M))
+#define MAX(N,M)   qMax(N,M) //(((N)>(M))?(N):(M))
 
 struct _QUTILDEFS_ { Q_GADGET }; // mock object
 

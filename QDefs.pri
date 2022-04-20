@@ -6,6 +6,7 @@ HEADERS += $$PWD/qutildefs.h \
     $$PWD/qdebugdefs.h \
     $$PWD/qenumdefs.h \
     $$PWD/qflagdefs.h \
+    $$PWD/qmodeldefs.h \
     $$PWD/qpropertydefs.h \
     $$PWD/qregisterdefs.h \
     $$PWD/qsingletondefs.h \

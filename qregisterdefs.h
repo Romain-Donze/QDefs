@@ -1,73 +1,98 @@
 #ifndef QREGISTERDEFS_H
 #define QREGISTERDEFS_H
 
+#include <QDebug>
 #include <QtQml>
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Macros qmlRegisterType
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-static const QString ERR_ENUM_CLASS    { QStringLiteral ("Enum-class !") };
-static const QString ERR_ATTACHED_OBJ  { QStringLiteral ("Attached-object class !") };
-static const QString ERR_ABSTRACT_BASE { QStringLiteral ("Abstract base class !") };
+#define ERR_ENUM_CLASS    "Enum-class !"
+#define ERR_ATTACHED_OBJ  "Attached-object class !"
+#define ERR_ABSTRACT_BASE "Abstract base class !"
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Private: for declaration purpose
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// qmlRegisterSingletonInstance
-#define _Q_REGISTER_SINGLETON_INSTANCE_IMPL(TYPE, FUNC, QML_NAME, MODULE) \
-    static void registerSingletonInstance##FUNC() { \
-        qmlRegisterSingletonInstance<TYPE>(MODULE, 1,0, QML_NAME, TYPE::Get()); \
+#define _Q_REGISTER_METATYPE_AT_STARTUP(TYPE, FUNC, NAME) \
+    static void registerMetaType##FUNC() { \
+        _Q_REGISTER_METATYPE(TYPE,NAME); \
     } \
-    Q_COREAPP_STARTUP_FUNCTION(registerSingletonInstance##FUNC) \
+    Q_COREAPP_STARTUP_FUNCTION(registerMetaType##FUNC) \
 
-// qmlRegisterSingletonType
-#define _Q_REGISTER_SINGLETON_IMPL(TYPE, FUNC, QML_NAME, MODULE) \
-    static void registerSingletonType##FUNC() { \
-        qmlRegisterSingletonType<TYPE>(MODULE, 1,0, QML_NAME, TYPE::GetQML); \
+#define _Q_REGISTER_METATYPE(TYPE, NAME) \
+    qRegisterMetaType<TYPE>(NAME); \
+
+#define _Q_REGISTER(TYPE, QML_NAME) \
+private: QML_ELEMENT \
+public: \
+    static void qmlRegister(const char * uri, const int majorVersion, const int minorVersion) { \
+            qmlRegisterType<TYPE>(uri, majorVersion, minorVersion, QML_NAME ); \
     } \
-    Q_COREAPP_STARTUP_FUNCTION(registerSingletonType##FUNC) \
+private:
 
-// qmlRegisterType
-#define _Q_REGISTER_IMPL(TYPE, FUNC, QML_NAME, MODULE) \
+#define _Q_REGISTER_ABSTRACT(TYPE, QML_NAME) \
+private: QML_ELEMENT \
+private: QML_UNCREATABLE(ERR_ABSTRACT_BASE) \
+public: \
+    static void qmlRegister(const char * uri, const int majorVersion, const int minorVersion) { \
+            qmlRegisterUncreatableType<TYPE>(uri, majorVersion, minorVersion, QML_NAME, ERR_ABSTRACT_BASE); \
+    } \
+private:
+
+#define _Q_REGISTER_SINGLETON(TYPE, QML_NAME) \
+private: QML_ELEMENT \
+private: QML_SINGLETON \
+public: \
+    static void qmlRegister(const char * uri, const int majorVersion, const int minorVersion) { \
+        qmlRegisterSingletonType<TYPE>(uri, majorVersion, majorVersion, QML_NAME, &TYPE::qmlSingletonProvider); \
+    } \
+private:
+
+#define _Q_REGISTER_SINGLETON_INSTANCE(TYPE, QML_NAME) \
+private: QML_ELEMENT \
+private: QML_SINGLETON \
+public: \
+    static void qmlRegister(const char * uri, const int majorVersion, const int minorVersion) { \
+        qmlRegisterSingletonInstance<TYPE>(uri, majorVersion, minorVersion, QML_NAME, TYPE::Get()); \
+    } \
+private:
+
+#define _Q_REGISTER_AT_STARTUP(TYPE, FUNC, MODULE) \
     static void registerTypes##FUNC() { \
-        qmlRegisterType<TYPE>(MODULE, 1,0, QML_NAME); \
+        TYPE::qmlRegister(MODULE, 1, 0); \
     } \
     Q_COREAPP_STARTUP_FUNCTION(registerTypes##FUNC) \
-
-// qmlRegisterUncreatableType
-#define _Q_REGISTER_ABSTRACT_IMPL(TYPE, FUNC, QML_NAME, MODULE) \
-    static void registerTypes##FUNC() { \
-        qmlRegisterUncreatableType<TYPE>(MODULE, 1,0, QML_NAME, ERR_ABSTRACT_BASE); \
-    } \
-    Q_COREAPP_STARTUP_FUNCTION(registerTypes##FUNC) \
-
-// qRegisterMetaType
-#define _Q_REGISTER_METATYPE_IMPL(TYPE, FUNC, NAME) \
-    static void registerNamedMetaType##FUNC() { \
-        qRegisterMetaType<TYPE>(NAME); \
-    } \
-    Q_COREAPP_STARTUP_FUNCTION(registerNamedMetaType##FUNC) \
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Public: use these instead
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define Q_REGISTER_SINGLETON_INSTANCE_NAMED(TYPE, NAME, MODULE)     _Q_REGISTER_SINGLETON_INSTANCE_IMPL(TYPE, TYPE, #NAME, MODULE)
-#define Q_REGISTER_SINGLETON_INSTANCE(TYPE, MODULE)                 _Q_REGISTER_SINGLETON_INSTANCE_IMPL(TYPE, TYPE, #TYPE, MODULE)
+#define Q_REGISTER_METATYPE(TYPE)                                           _Q_REGISTER_METATYPE(TYPE, #TYPE)
+#define Q_REGISTER_METATYPE_NAMED(TYPE, NAME)                               _Q_REGISTER_METATYPE(TYPE, #NAME)
 
-#define Q_REGISTER_SINGLETON_NAMED(TYPE, NAME, MODULE)              _Q_REGISTER_SINGLETON_IMPL(TYPE, TYPE, #NAME, MODULE)
-#define Q_REGISTER_SINGLETON(TYPE, MODULE)                          _Q_REGISTER_SINGLETON_IMPL(TYPE, TYPE, #TYPE, MODULE)
+#define Q_REGISTER(TYPE)                                                    _Q_REGISTER(TYPE, #TYPE)
+#define Q_REGISTER_NAMED(TYPE, NAME)                                        _Q_REGISTER(TYPE, #NAME)
 
-#define Q_REGISTER_NAMED(TYPE, NAME, MODULE)                        _Q_REGISTER_IMPL(TYPE, TYPE, #NAME, MODULE)
-#define Q_REGISTER(TYPE, MODULE)                                    _Q_REGISTER_IMPL(TYPE, TYPE, #TYPE, MODULE)
+#define Q_REGISTER_ABSTRACT(TYPE)                                           _Q_REGISTER_ABSTRACT(TYPE, #TYPE)
+#define Q_REGISTER_ABSTRACT_NAMED(TYPE, NAME)                               _Q_REGISTER_ABSTRACT(TYPE, #NAME)
 
-#define Q_REGISTER_ABSTRACT_NAMED(TYPE, NAME, MODULE)               _Q_REGISTER_ABSTRACT_IMPL(TYPE, TYPE, #NAME, MODULE)
-#define Q_REGISTER_ABSTRACT(TYPE, MODULE)                           _Q_REGISTER_ABSTRACT_IMPL(TYPE, TYPE, #TYPE, MODULE)
+#define Q_REGISTER_SINGLETON(TYPE)                                          _Q_REGISTER_SINGLETON(TYPE, #TYPE)
+#define Q_REGISTER_SINGLETON_NAMED(TYPE, NAME)                              _Q_REGISTER_SINGLETON(TYPE, #NAME)
 
-#define Q_REGISTER_METATYPE_NAMED(TYPE, NAME)                       _Q_REGISTER_METATYPE_IMPL(TYPE, TYPE, #NAME)
-#define Q_REGISTER_METATYPE(TYPE)                                   _Q_REGISTER_METATYPE_IMPL(TYPE, TYPE, #TYPE)
+#define Q_REGISTER_SINGLETON_INSTANCE(TYPE)                                 _Q_REGISTER_SINGLETON_INSTANCE(TYPE, #TYPE)
+#define Q_REGISTER_SINGLETON_INSTANCE_NAMED(TYPE, NAME)                     _Q_REGISTER_SINGLETON_INSTANCE(TYPE, #NAME)
+
+#define Q_REGISTER_AT_STARTUP(TYPE, MODULE)                                 _Q_REGISTER_AT_STARTUP(TYPE, TYPE, MODULE)
+
+#define Q_REGISTER_METATYPE_NAMED_AT_STARTUP(TYPE, NAME)                    _Q_REGISTER_METATYPE_AT_STARTUP(TYPE, TYPE, #NAME)
+#define Q_REGISTER_METATYPE_AT_STARTUP(TYPE)                                _Q_REGISTER_METATYPE_AT_STARTUP(TYPE, TYPE, #TYPE)
+
+#define Q_INIT_MODULE(MODULE, MAJOR, MINOR)       \
+    qmlRegisterUncreatableType<QObject>   (MODULE, MAJOR, MINOR, MODULE"_Module_Object", "Default object for module creation"); \
+    qmlRegisterModule(MODULE, MAJOR, MINOR);
 
 struct _QREGISTERDEFS_ { Q_GADGET }; // mock object
 

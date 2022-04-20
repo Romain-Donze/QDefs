@@ -173,8 +173,8 @@
 #define Q_CONSTANT_ENU_PROPERTY(TYPE, name, Name, ...) _Q_CONSTANT_PROPERTY_IMPL     (name, Name, TYPE,     int,       int,          TYPE,         TYPE,         __VA_ARGS__)
 #define Q_ABSTRACT_ENU_PROPERTY(TYPE, name, Name, ...) _Q_ABSTRACT_PROPERTY_IMPL     (name, Name, TYPE,     int,       int,          TYPE,         TYPE,         __VA_ARGS__)
 
-#define Q_DEFAULT_PROPERTY(name) \
-    private: Q_CLASSINFO ("DefaultProperty", #name)
+#define Q_DEFAULT_PROPERTY(NAME) \
+    private: Q_CLASSINFO ("DefaultProperty", #NAME)
 
 #if QT_VERSION < 0x050700
 template<typename T> const T & qAsConst (const T & arg) {

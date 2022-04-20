@@ -32,13 +32,13 @@ The `***` can be either `VAR`, `PTR`, `REF`, `ENU` or `FUZ`. The three first are
 
 ### For simple QML registering
 
-* `Q_REGISTER` : a macro that register a Q_OBJECT class to a QML module (Major versio=1, Minor version=0)
+* `Q_REGISTER` : a macro that register a Q_OBJECT class to a QML module
 
-* `Q_REGISTER_ABSTRACT` : a macro that register an abstract Q_OBJECT or Q_GADGET class to a QML module (Major versio=1, Minor version=0)
+* `Q_REGISTER_ABSTRACT` : a macro that register an abstract Q_OBJECT or Q_GADGET class to a QML module
 
-* `Q_REGISTER_METATYPE` : a macro that register a metatype to QML
+* `Q_REGISTER_METATYPE_AT_STARTUP` : a macro that register a metatype to QML
 
-* `Q_REGISTER_SINGLETON_INSTANCE` : a macro that register a Q_OBJECT singleton instance to a QML module (Major versio=1, Minor version=0)
+* `Q_REGISTER_SINGLETON` : a macro that register a Q_OBJECT singleton instance to a QML module
 
 ### For simple C++ time measuring
 

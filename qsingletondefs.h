@@ -36,7 +36,7 @@
 #define _Q_OBJECT_QML_SINGLETON_IMPL(TYPE) \
     _Q_OBJECT_SINGLETON_IMPL(TYPE) \
     public: \
-    static TYPE *GetQML(QQmlEngine *engine,  QJSEngine *scriptEngine) \
+    static QObject *qmlSingletonProvider(QQmlEngine *engine,  QJSEngine *scriptEngine) \
     { \
         Q_UNUSED(engine); \
         Q_UNUSED(scriptEngine); \

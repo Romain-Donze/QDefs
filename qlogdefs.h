@@ -1,8 +1,9 @@
-#ifndef QDEBUGDEFS_H
-#define QDEBUGDEFS_H
+#ifndef QLOGDEFS_H
+#define QLOGDEFS_H
 
 #include <QDebug>
 #include <QString>
+#include <QStringLiteral>
 
 #define QDEBUG_NO_TRACE
 
@@ -16,18 +17,23 @@
 // Fonctions de debug
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-inline void qDebugStart(const QString& title, const QChar& repeat='-')
+Q_GLOBAL_STATIC(QByteArray, qLogLineData)
+
+inline const char* qLogLineMessage(const QString& title, const QChar& repeat='-')
 {
-    QString line=QString(100,repeat);
+    QString line(100,repeat);
 
     line.replace(line.size()/2-title.size()/2,title.size(),title);
 
-    qInfo()<<line;
+    qLogLineData->clear();
+    qLogLineData->append(line);
+
+    return qLogLineData->constData();
 }
 
-inline void qDebugEnd(const QChar& repeat='-')
+inline const char* qLogLine(const QChar& repeat='-')
 {
-    qDebugStart("",repeat);
+    return qLogLineMessage("",repeat);
 }
 
-#endif // QDEBUGDEFS_H
+#endif // QLOGDEFS_H

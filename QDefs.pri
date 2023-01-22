@@ -2,15 +2,16 @@ CONFIG += c++17
 
 INCLUDEPATH += $$PWD
 
-HEADERS += $$PWD/qutildefs.h \
-    $$PWD/qdebugdefs.h \
+HEADERS += \
+    $$PWD/qutildefs.h \
+    $$PWD/qlogdefs.h \
     $$PWD/qenumdefs.h \
     $$PWD/qflagdefs.h \
-    $$PWD/qmodeldefs.h \
     $$PWD/qpropertydefs.h \
     $$PWD/qregisterdefs.h \
     $$PWD/qsingletondefs.h \
-    $$PWD/qtimedefs.h
+    $$PWD/qtimedefs.h \
+    $$PWD/qoperatordefs.h
 
 DISTFILES += \
     $$PWD/QDefs\

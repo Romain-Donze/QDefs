@@ -2,6 +2,7 @@
 #define QSINGLETONDEFS_H
 
 #include <QObject>
+#include <QThread>
 #include <QMutex>
 #include <QQmlEngine>
 #include <QJSEngine>
